@@ -28,7 +28,7 @@ const resolveImageSource = (source) => {
 
 const formatCurrency = (value) => `Rs. ${(value || 0).toLocaleString('en-IN')}`;
 
-const ProductDetail = ({ product, onBack, onWishlist, onShare, onSelectProduct, onAddToCart, onBuyNow }) => {
+const ProductDetail = ({ product, onBack, onWishlist, onShare, onSelectProduct, onAddToCart, onBuyNow, onOpenCart }) => {
 	const merged = useMemo(() => ({ ...fallbackDetail, ...(product || {}) }), [product]);
 	const [selectedStorage, setSelectedStorage] = useState(merged.selectedStorage || merged.storage?.[0] || '');
 	const [selectedColor, setSelectedColor] = useState(merged.selectedColor || merged.color || '');
@@ -175,7 +175,7 @@ const ProductDetail = ({ product, onBack, onWishlist, onShare, onSelectProduct, 
 					/>
 				</View>
 
-				<TouchableOpacity style={styles.headerCartBtn} activeOpacity={0.7}>
+				<TouchableOpacity style={styles.headerCartBtn} activeOpacity={0.7} onPress={onOpenCart}>
 					<Ionicons name="cart-outline" size={18} color="#646cff" />
 				</TouchableOpacity>
 			</View>
