@@ -6,6 +6,8 @@ import HeaderBar from './Components/HeaderBar';
 import ImageSlider from './Components/Imageslide';
 import CategoryList from './Components/Category/CategoryList';
 import DealsList from './Components/DealItem';
+import ProductCardDisplay from './Components/Products/Productcarddisplay';
+import LiveSell from './Components/Products/Livesell';
 import Footer from './Components/Footer';
 import { allProducts, getProductDetailData } from './Components/Products/ProductItem';
 import ProductDetail from './Components/Products/ProductDetail';
@@ -71,6 +73,16 @@ export default function App() {
             <DealsList
               products={allProducts}
               onProductPress={handleProductPress}
+            />
+            <ProductCardDisplay
+              products={allProducts}
+              onProductPress={handleProductPress}
+              limit={8}
+            />
+            <LiveSell
+              products={allProducts}
+              onProductPress={handleProductPress}
+              limit={4}
             />
           </ScrollView>
           <Footer activeTab="home" />
