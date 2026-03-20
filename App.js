@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View, Alert, SafeAreaView, ScrollView } from 'react-native';
+import { StyleSheet, View, Alert, ScrollView } from 'react-native';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import HeaderBar from './Components/HeaderBar';
 import ImageSlider from './Components/Imageslide';
 import CategoryList from './Components/Category/CategoryList';
 import DealsList from './Components/DealItem';
 import Footer from './Components/Footer';
-import ProductList from './Components/Products/ProductList';
 import { allProducts, getProductDetailData } from './Components/Products/ProductItem';
 import ProductDetail from './Components/Products/ProductDetail';
 
@@ -39,45 +39,45 @@ export default function App() {
 
   if (selectedProduct) {
     return (
-      <ProductDetail
-        product={selectedProduct}
-        onBack={() => setSelectedProduct(null)}
-        onWishlist={() => handleProductWishlist(selectedProduct)}
-        onShare={() => Alert.alert('Share', `Share ${selectedProduct.title}`)}
-      />
+      <SafeAreaProvider>
+        <ProductDetail
+          product={selectedProduct}
+          onBack={() => setSelectedProduct(null)}
+          onWishlist={() => handleProductWishlist(selectedProduct)}
+          onShare={() => Alert.alert('Share', `Share ${selectedProduct.title}`)}
+          onSelectProduct={setSelectedProduct}
+          onAddToCart={handleAddToCart}
+          onBuyNow={(product) => Alert.alert('Buy Now', `Proceeding to checkout for ${product?.title || 'Product'}`)}
+        />
+      </SafeAreaProvider>
     );
   }
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.container}>
-        <HeaderBar
-          onWishlistPress={handleWishlistPress}
-          onSearchPress={handleSearchPress}
-          onNotificationPress={handleNotificationPress}
-        />
-        <ScrollView 
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.scrollContent}
-        >
-          <ImageSlider />
-          <CategoryList />
-          {/* DealsList placed directly after CategoryList */}
-          <DealsList />
-          <ProductList
-            title="Featured Deals"
-            products={allProducts}
-            horizontal
-            showHeader
-            onProductPress={handleProductPress}
-            onAddToCart={handleAddToCart}
-            onWishlist={handleProductWishlist}
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.safeArea}>
+        <View style={styles.container}>
+          <HeaderBar
+            onWishlistPress={handleWishlistPress}
+            onSearchPress={handleSearchPress}
+            onNotificationPress={handleNotificationPress}
           />
-        </ScrollView>
-        <Footer activeTab="home" />
-        <StatusBar style="auto" />
-      </View>
-    </SafeAreaView>
+          <ScrollView 
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.scrollContent}
+          >
+            <ImageSlider />
+            <CategoryList />
+            <DealsList
+              products={allProducts}
+              onProductPress={handleProductPress}
+            />
+          </ScrollView>
+          <Footer activeTab="home" />
+          <StatusBar style="auto" />
+        </View>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -7,8 +7,20 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
+import { categoryProducts } from "./Products/ProductItem";
 
-const DealsList = () => {
+const resolveImageSource = (source) => {
+  if (!source) return null;
+  if (typeof source === "string") return { uri: source };
+  if (source?.uri) return source;
+  return source;
+};
+
+const formatCurrency = (value) => `Rs. ${(value || 0).toLocaleString("en-IN")}`;
+
+const INITIAL_TIMER_SECONDS = (12 * 60) + 59;
+
+const DealsList = ({ products = [], onProductPress }) => {
   const deals = [
     {
       id: "1",
@@ -47,6 +59,30 @@ const DealsList = () => {
     },
   ];
 
+  const [dealSeconds, setDealSeconds] = useState(INITIAL_TIMER_SECONDS);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setDealSeconds((prev) => (prev > 0 ? prev - 1 : INITIAL_TIMER_SECONDS));
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const hours = String(Math.floor(dealSeconds / 3600)).padStart(2, "0");
+  const minutes = String(Math.floor((dealSeconds % 3600) / 60)).padStart(2, "0");
+  const seconds = String(dealSeconds % 60).padStart(2, "0");
+
+  const todaysDeals = products.slice(0, 8);
+  const skinCareProducts = categoryProducts["Health & Skin Care"] || [];
+  const skinCarePreview = skinCareProducts.slice(0, 3);
+  const bedsItem = products.find((item) => /bed|furniture|table/i.test(item?.title || "")) || null;
+
+ 
+  const saleBanner = {
+    uri: "https://imgs.search.brave.com/gtq_rykBheraaQFMae8HTv6lkELGwExJoJTsyJlYQxw/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wNzQv/MTUwLzQ3NS9zbWFs/bC95ZWxsb3ctYmFj/a2dyb3VuZC13aXRo/LWJsYWNrLWFuZC13/aGl0ZS1saW1pdGVk/LW9mZmVyLXRleHQt/YW5kLXN0b3B3YXRj/aC1pY29uLXZlY3Rv/ci5qcGc",
+  };
+
   return (
     <View style={styles.wrapper}>
       {/* Header: More Deals + View All */}
@@ -78,6 +114,94 @@ const DealsList = () => {
           </TouchableOpacity>
         )}
       />
+
+      <View style={styles.todayHeaderWrap}>
+        <Text style={styles.todayTitle}>Today&apos;s Deal</Text>
+        <View style={styles.timerWrap}>
+          <Text style={styles.timerChip}>{hours}</Text>
+          <Text style={styles.timerColon}>:</Text>
+          <Text style={styles.timerChip}>{minutes}</Text>
+          <Text style={styles.timerColon}>:</Text>
+          <Text style={styles.timerChip}>{seconds}</Text>
+        </View>
+      </View>
+
+      <FlatList
+        data={todaysDeals}
+        horizontal
+        keyExtractor={(item) => item.id?.toString()}
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.productRow}
+        renderItem={({ item }) => {
+          const previewImage = resolveImageSource(item?.images?.[0] || item?.image);
+
+          return (
+            <TouchableOpacity
+              style={styles.productCard}
+              activeOpacity={0.85}
+              onPress={() => onProductPress?.(item)}
+            >
+              <View style={styles.productImageWrap}>
+                {previewImage ? (
+                  <Image source={previewImage} style={styles.productImage} resizeMode="cover" />
+                ) : null}
+
+                <View style={styles.badgesRow}>
+                  {item?.isNew ? (
+                    <View style={styles.newBadge}>
+                      <Text style={styles.badgeText}>New</Text>
+                    </View>
+                  ) : null}
+                  {!!item?.discount && (
+                    <View style={styles.discountBadge}>
+                      <Text style={styles.badgeText}>-{item.discount}%</Text>
+                    </View>
+                  )}
+                </View>
+              </View>
+
+              <Text numberOfLines={2} style={styles.productTitle}>{item?.title}</Text>
+              <Text style={styles.productPrice}>{formatCurrency(item?.price)}</Text>
+              {!!item?.originalPrice && (
+                <Text style={styles.productOldPrice}>NPR {item.originalPrice.toLocaleString("en-IN")}</Text>
+              )}
+              <View style={styles.ratingRow}>
+                <Text style={styles.star}>★</Text>
+                <Text style={styles.ratingText}>{item?.rating || 4.2}</Text>
+              </View>
+            </TouchableOpacity>
+          );
+        }}
+      />
+
+      <View style={styles.promoWrap}>
+        <TouchableOpacity
+          activeOpacity={0.9}
+          style={styles.skinCareCard}
+          onPress={() => skinCareProducts[0] && onProductPress?.(skinCareProducts[0])}
+        >
+          <Text style={styles.skinCareTitle}>Skin Care Products</Text>
+          <View style={styles.skinCareRow}>
+            {skinCarePreview.map((item) => {
+              const image = resolveImageSource(item?.images?.[0] || item?.image);
+              return (
+                <View key={item.id} style={styles.skinItemWrap}>
+                  {image ? (
+                    <Image source={image} style={styles.skinItemImage} resizeMode="contain" />
+                  ) : null}
+                  <View style={styles.pricePill}>
+                    <Text style={styles.pricePillText}>{formatCurrency(item?.price)}</Text>
+                  </View>
+                </View>
+              );
+            })}
+          </View>
+        </TouchableOpacity>
+
+        
+
+        <Image source={saleBanner} style={styles.saleBanner} resizeMode="cover" />
+      </View>
     </View>
   );
 };
@@ -88,7 +212,7 @@ const styles = StyleSheet.create({
   wrapper: {
     marginTop: 15,
     backgroundColor: "#fff",
-    paddingBottom: 10,
+    paddingBottom: 14,
   },
   header: {
     flexDirection: "row",
@@ -104,20 +228,210 @@ const styles = StyleSheet.create({
   },
   viewAll: {
     fontSize: 14,
-    color: "#1a72dc",
+    color: "#f3b400",
     fontWeight: "500",
   },
   item: {
     marginRight: 10,
-    width: 90,
-    height: 90,
+    width: 70,
+    height: 45,
     borderRadius: 8,
     overflow: "hidden",
-    borderWidth: 1,
-    borderColor: "#f0f0f0",
   },
   image: {
     width: "100%",
     height: "100%",
+  },
+  todayHeaderWrap: {
+    marginTop: 14,
+    marginBottom: 10,
+    paddingHorizontal: 15,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  todayTitle: {
+    fontSize: 26,
+    fontWeight: "700",
+    color: "#1f2333",
+  },
+  timerWrap: {
+    marginLeft: 10,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  timerChip: {
+    minWidth: 22,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 10,
+    backgroundColor: "#5964e8",
+    color: "#fff",
+    fontSize: 10,
+    fontWeight: "700",
+    textAlign: "center",
+  },
+  timerColon: {
+    marginHorizontal: 3,
+    color: "#5964e8",
+    fontWeight: "700",
+    fontSize: 12,
+  },
+  productRow: {
+    paddingHorizontal: 10,
+    paddingRight: 14,
+  },
+  productCard: {
+    width: 122,
+    marginHorizontal: 4,
+  },
+  productImageWrap: {
+    width: "100%",
+    height: 86,
+    borderRadius: 14,
+    backgroundColor: "#ececef",
+    overflow: "hidden",
+    marginBottom: 8,
+  },
+  productImage: {
+    width: "100%",
+    height: "100%",
+  },
+  badgesRow: {
+    position: "absolute",
+    top: 6,
+    left: 6,
+    flexDirection: "row",
+  },
+  newBadge: {
+    backgroundColor: "#4c66ff",
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 7,
+    marginRight: 4,
+  },
+  discountBadge: {
+    backgroundColor: "#ff8a00",
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 7,
+  },
+  badgeText: {
+    color: "#fff",
+    fontSize: 8,
+    fontWeight: "700",
+  },
+  productTitle: {
+    fontSize: 11,
+    lineHeight: 14,
+    color: "#1f2333",
+    fontWeight: "500",
+  },
+  productPrice: {
+    marginTop: 4,
+    fontSize: 12,
+    color: "#4064ff",
+    fontWeight: "700",
+  },
+  productOldPrice: {
+    marginTop: 1,
+    fontSize: 9,
+    color: "#9ca3af",
+    textDecorationLine: "line-through",
+  },
+  ratingRow: {
+    marginTop: 2,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  star: {
+    fontSize: 10,
+    color: "#f7a400",
+    marginRight: 2,
+  },
+  ratingText: {
+    fontSize: 11,
+    color: "#6b7280",
+  },
+  promoWrap: {
+    marginTop: 14,
+    paddingHorizontal: 10,
+  },
+  skinCareCard: {
+    backgroundColor: "#efeff2",
+    borderRadius: 16,
+    padding: 12,
+  },
+  skinCareTitle: {
+    fontSize: 24,
+    fontWeight: "500",
+    color: "#2a2d3b",
+    marginBottom: 8,
+  },
+  skinCareRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-end",
+  },
+  skinItemWrap: {
+    width: "31%",
+    alignItems: "center",
+  },
+  skinItemImage: {
+    width: "100%",
+    height: 90,
+  },
+  pricePill: {
+    marginTop: -4,
+    backgroundColor: "#5b63e8",
+    borderRadius: 16,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+  },
+  pricePillSmall: {
+    position: "absolute",
+    bottom: 8,
+    left: "50%",
+    transform: [{ translateX: -30 }],
+    backgroundColor: "#5b63e8",
+    borderRadius: 16,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+  },
+  pricePillText: {
+    color: "#fff",
+    fontSize: 11,
+    fontWeight: "600",
+  },
+  smallCardsRow: {
+    marginTop: 8,
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  smallCard: {
+  singleSmallCard: {
+    flex: 1,
+  },
+    width: "49%",
+    backgroundColor: "#efeff2",
+    borderRadius: 16,
+    padding: 12,
+    height: 118,
+    overflow: "hidden",
+  },
+  smallCardTitle: {
+    fontSize: 24,
+    color: "#2a2d3b",
+    fontWeight: "500",
+  },
+  smallCardImage: {
+    width: "100%",
+    height: 76,
+    marginTop: 4,
+  },
+  saleBanner: {
+    marginTop: 12,
+    width: "100%",
+    height: 150,
+    borderRadius: 20,
   },
 });

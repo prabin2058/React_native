@@ -5,8 +5,6 @@ import {
     TouchableOpacity,
     Text,
     StyleSheet,
-    SafeAreaView,
-    Platform,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -24,7 +22,7 @@ const HeaderBar = ({
     };
 
     return (
-        <SafeAreaView style={styles.safeArea}>
+        <View style={styles.safeArea}>
             <View style={styles.container}>
                 {/* Wishlist Icon */}
                 <TouchableOpacity
@@ -62,14 +60,14 @@ const HeaderBar = ({
                     <Ionicons name="notifications-outline" size={20} color="#646cff" />
                 </TouchableOpacity>
             </View>
-        </SafeAreaView>
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
     safeArea: {
         backgroundColor: '#f3f4f8',
-        paddingTop: Platform.OS === 'android' ? 30 : 0, // Handle status bar on Android
+        paddingTop: 0,
     },
     container: {
         flexDirection: 'row',
@@ -77,12 +75,12 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         backgroundColor: '#f3f4f8',
         paddingHorizontal: 12,
-        paddingVertical: 8,
+        paddingVertical: 4,
     },
     iconButton: {
-        width: 36,
-        height: 36,
-        borderRadius: 18,
+        width: 32,
+        height: 32,
+        borderRadius: 16,
         borderWidth: 1,
         borderColor: '#e9e9ef',
         backgroundColor: '#fafafe',
@@ -98,7 +96,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
         paddingLeft: 12,
         paddingRight: 4,
-        height: 42,
+        height: 36,
         borderWidth: 1.5,
         borderColor: '#646cff',
     },
@@ -110,7 +108,7 @@ const styles = StyleSheet.create({
     },
     searchButton: {
         backgroundColor: '#646cff',
-        paddingVertical: 8,
+        paddingVertical: 6,
         paddingHorizontal: 16,
         borderRadius: 18,
         justifyContent: 'center',
