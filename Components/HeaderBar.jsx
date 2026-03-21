@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
     View,
     TextInput,
@@ -12,12 +12,17 @@ const HeaderBar = ({
     onWishlistPress,
     onSearchPress,
     onNotificationPress,
+    onSearchTextChange,
+    onSearchFocus,
+    searchValue = '',
 }) => {
-    const [searchText, setSearchText] = useState('');
+    const handleSearchTextChange = (value) => {
+        onSearchTextChange?.(value);
+    };
 
     const handleSearch = () => {
         if (onSearchPress) {
-            onSearchPress(searchText);
+            onSearchPress(searchValue.trim());
         }
     };
 
@@ -39,8 +44,11 @@ const HeaderBar = ({
                         style={styles.searchInput}
                         placeholder="Search for product ...."
                         placeholderTextColor="#999"
-                        value={searchText}
-                        onChangeText={setSearchText}
+                        value={searchValue}
+                        onChangeText={handleSearchTextChange}
+                        onFocus={() => onSearchFocus?.()}
+                        onSubmitEditing={handleSearch}
+                        returnKeyType="search"
                     />
                     <TouchableOpacity
                         onPress={handleSearch}

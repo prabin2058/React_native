@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View, Alert, ScrollView } from 'react-native';
+import { StyleSheet, View, Alert, FlatList } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
 import HeaderBar from './Components/HeaderBar';
@@ -16,6 +16,8 @@ import Checkout from './Components/Cart/Checkout';
 import Footer from './Components/Footer';
 import { allProducts, getProductDetailData } from './Components/Products/ProductItem';
 import ProductDetail from './Components/Products/ProductDetail';
+import ProductSearchSection from './Components/Search/ProductSearchSection';
+import SearchHistorySection from './Components/Search/SearchHistorySection';
 
 export default function App() {
   const homeScrollRef = useRef(null);
@@ -25,21 +27,52 @@ export default function App() {
   const [cartItems, setCartItems] = useState([]);
   const [checkoutItems, setCheckoutItems] = useState([]);
   const [checkoutSource, setCheckoutSource] = useState('cart');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [homeReloadKey, setHomeReloadKey] = useState(0);
+  const [searchHistory, setSearchHistory] = useState([]);
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
 
   const handleWishlistPress = () => {
     Alert.alert('Wishlist', 'Heart icon pressed!');
   };
 
   const handleSearchPress = (query) => {
-    Alert.alert('Search', `Searching for: ${query}`);
+    const trimmedQuery = (query || '').trim();
+    setSearchQuery(trimmedQuery);
+
+    if (!trimmedQuery) return;
+
+    setSearchHistory((prev) => {
+      const next = [trimmedQuery, ...prev.filter((item) => item.toLowerCase() !== trimmedQuery.toLowerCase())];
+      return next.slice(0, 12);
+    });
+  };
+
+  const handleSearchTextChange = (value) => {
+    setSearchQuery(value || '');
   };
 
   const handleNotificationPress = () => {
     Alert.alert('Notifications', 'Bell icon pressed!');
   };
 
+  const handleSearchFocus = () => {
+    setIsSearchFocused(true);
+  };
+
+  const handleSearchHistorySelect = (value) => {
+    const selected = (value || '').trim();
+    setSearchQuery(selected);
+    handleSearchPress(selected);
+  };
+
+  const handleClearSearchHistory = () => {
+    setSearchHistory([]);
+  };
+
   const handleProductPress = (product) => {
     setActiveTab('home');
+    setIsSearchFocused(false);
     setSelectedProduct(getProductDetailData(product));
   };
 
@@ -165,7 +198,10 @@ export default function App() {
     if (tabKey === 'home') {
       setSelectedProduct(null);
       setSpecialOfferLimit(6);
-      homeScrollRef.current?.scrollTo({ y: 0, animated: true });
+      setSearchQuery('');
+      setIsSearchFocused(false);
+      setHomeReloadKey((prev) => prev + 1);
+      homeScrollRef.current?.scrollToOffset?.({ offset: 0, animated: true });
       return;
     }
 
@@ -247,40 +283,65 @@ export default function App() {
             onWishlistPress={handleWishlistPress}
             onSearchPress={handleSearchPress}
             onNotificationPress={handleNotificationPress}
+            onSearchTextChange={handleSearchTextChange}
+            onSearchFocus={handleSearchFocus}
+            searchValue={searchQuery}
           />
-          <ScrollView
+          <FlatList
+            key={homeReloadKey}
             ref={homeScrollRef}
+            data={[]}
+            keyExtractor={(_, index) => index.toString()}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.scrollContent}
-          >
-            <ImageSlider />
-            <CategoryList />
-            <DealsList
-              products={allProducts}
-              onProductPress={handleProductPress}
-            />
-            <ProductCardDisplay
-              products={allProducts}
-              onProductPress={handleProductPress}
-              limit={8}
-            />
-            <LiveSell
-              products={allProducts}
-              onProductPress={handleProductPress}
-              limit={4}
-            />
-            <Flashdeal
-              products={allProducts}
-              onProductPress={handleProductPress}
-              limit={4}
-            />
-            <Specialoffer
-              products={allProducts}
-              onProductPress={handleProductPress}
-              onViewAll={handleSpecialOfferViewAll}
-              limit={specialOfferLimit}
-            />
-          </ScrollView>
+            ListHeaderComponent={
+              isSearchFocused && !searchQuery.trim() ? (
+                <SearchHistorySection
+                  history={searchHistory}
+                  onSelectHistory={handleSearchHistorySelect}
+                  onClearHistory={handleClearSearchHistory}
+                />
+              ) : searchQuery.trim() ? (
+                <ProductSearchSection
+                  query={searchQuery}
+                  products={allProducts}
+                  onProductPress={handleProductPress}
+                  onClearSearch={() => setSearchQuery('')}
+                />
+              ) : (
+                <>
+                  <ImageSlider />
+                  <CategoryList />
+                  <DealsList
+                    products={allProducts}
+                    onProductPress={handleProductPress}
+                  />
+                  <ProductCardDisplay
+                    products={allProducts}
+                    onProductPress={handleProductPress}
+                    limit={8}
+                  />
+                  <LiveSell
+                    products={allProducts}
+                    onProductPress={handleProductPress}
+                    limit={4}
+                  />
+                  <Flashdeal
+                    products={allProducts}
+                    onProductPress={handleProductPress}
+                    limit={4}
+                  />
+                  <Specialoffer
+                    products={allProducts}
+                    onProductPress={handleProductPress}
+                    onViewAll={handleSpecialOfferViewAll}
+                    limit={specialOfferLimit}
+                  />
+                </>
+              )
+            }
+            renderItem={null}
+          />
           <Footer activeTab={activeTab} onTabPress={handleFooterTabPress} />
           <StatusBar style="auto" />
         </View>

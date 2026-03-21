@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
+import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { allProducts } from "./ProductItem";
 
@@ -68,7 +68,7 @@ const ProductCardDisplay = ({ products = allProducts, onProductPress, limit = 6 
 							key={tab.key}
 							activeOpacity={0.85}
 							onPress={() => setActiveTab(tab.key)}
-							style={styles.tabItem}
+							style={[styles.tabItem, isActive && styles.tabItemActive]}
 						>
 							{tab.showNewTag ? (
 								<View style={styles.tabNewBadge}>
@@ -89,19 +89,13 @@ const ProductCardDisplay = ({ products = allProducts, onProductPress, limit = 6 
 				})}
 			</ScrollView>
 
-			<FlatList
-				data={displayProducts}
-				keyExtractor={(item) => item.id?.toString()}
-				numColumns={2}
-				scrollEnabled={false}
-				showsVerticalScrollIndicator={false}
-				columnWrapperStyle={styles.gridRow}
-				contentContainerStyle={styles.flatListContent} // Added
-				renderItem={({ item }) => {
+			<View style={styles.productGrid}>
+				{displayProducts.map((item) => {
 					const previewImage = resolveImageSource(item?.images?.[0] || item?.image);
 
 					return (
 						<TouchableOpacity
+							key={item.id?.toString()}
 							style={styles.productCard}
 							activeOpacity={0.85}
 							onPress={() => onProductPress?.(item)}
@@ -136,8 +130,8 @@ const ProductCardDisplay = ({ products = allProducts, onProductPress, limit = 6 
 							</View>
 						</TouchableOpacity>
 					);
-				}}
-			/>
+				})}
+			</View>
 
 			<View style={styles.promoSection}>
 				<TouchableOpacity activeOpacity={0.9} style={styles.promoMainCard}>
@@ -177,24 +171,30 @@ export default ProductCardDisplay;
 
 const styles = StyleSheet.create({
 	wrapper: {
-		flex: 1, 
-		marginTop: 14,
+		flex: 1,
+		marginTop: 16,
 	},
 	tabsContainer: {
-		paddingHorizontal: 12,
-		paddingBottom: 12,
+		paddingHorizontal: 14,
+		paddingBottom: 10,
 		alignItems: "center",
 	},
 	tabItem: {
 		flexDirection: "row",
 		alignItems: "center",
-		marginRight: 16,
+		paddingHorizontal: 10,
+		paddingVertical: 6,
+		borderRadius: 999,
+		marginRight: 10,
+	},
+	tabItemActive: {
+		backgroundColor: "#eef2ff",
 	},
 	tabIcon: {
 		marginRight: 4,
 	},
 	tabText: {
-		fontSize: 14,
+		fontSize: 12,
 		color: "#4b5563",
 		fontWeight: "500",
 	},
@@ -206,40 +206,31 @@ const styles = StyleSheet.create({
 		backgroundColor: "#ff2b6a",
 		paddingHorizontal: 5,
 		paddingVertical: 2,
-		borderRadius: 4,
+		borderRadius: 6,
 		marginRight: 6,
 	},
 	tabNewBadgeText: {
 		color: "#fff",
-		fontSize: 9,
+		fontSize: 8,
 		fontWeight: "800",
 	},
-	flatListContent: {
-		paddingHorizontal: 12, // Moved padding here instead
-	},
-	gridRow: {
+	productGrid: {
+		paddingHorizontal: 16,
+		flexDirection: "row",
+		flexWrap: "wrap",
 		justifyContent: "space-between",
-		marginBottom: 14,
 	},
 	productCard: {
-		width: "48%", // Changed from 49% to 48% for better spacing
-		backgroundColor: "#fff",
-		borderRadius: 12,
-		paddingBottom: 8,
-		// Added shadow for better card appearance
-		shadowColor: "#000",
-		shadowOffset: { width: 0, height: 1 },
-		shadowOpacity: 0.05,
-		shadowRadius: 2,
-		elevation: 2,
+		flexBasis: "48.5%",
+		maxWidth: "48.5%",
+		marginBottom: 14,
 	},
 	productImageWrap: {
-		width: "100%",
-		aspectRatio: 1, // Changed from fixed height to aspect ratio for responsiveness
-		borderRadius: 16,
-		backgroundColor: "#ececef",
+		aspectRatio: 1,
+		borderRadius: 18,
+		
 		overflow: "hidden",
-		marginBottom: 10,
+		marginBottom: 8,
 	},
 	productImage: {
 		width: "100%",
@@ -250,59 +241,55 @@ const styles = StyleSheet.create({
 		top: 8,
 		left: 8,
 		flexDirection: "row",
-		gap: 4, // Added gap for better spacing
 	},
 	newBadge: {
-		backgroundColor: "#4c66ff",
-		paddingHorizontal: 8,
-		paddingVertical: 4,
+		backgroundColor: "#5d68ff",
+		paddingHorizontal: 6,
+		paddingVertical: 2,
 		borderRadius: 8,
+		marginRight: 4,
 	},
 	discountBadge: {
 		backgroundColor: "#ff8a00",
-		paddingHorizontal: 8,
-		paddingVertical: 4,
+		paddingHorizontal: 6,
+		paddingVertical: 2,
 		borderRadius: 8,
 	},
 	badgeText: {
 		color: "#fff",
-		fontSize: 10, // Increased from 8
+		fontSize: 8,
 		fontWeight: "700",
 	},
 	productTitle: {
-		fontSize: 13, // Increased from 11
+		fontSize: 14,
 		lineHeight: 18,
 		color: "#1f2333",
 		fontWeight: "500",
-		marginHorizontal: 4,
 	},
 	productPrice: {
-		marginTop: 6,
-		marginHorizontal: 4,
-		fontSize: 14, // Increased from 12
+		marginTop: 4,
+		fontSize: 24,
 		color: "#4064ff",
 		fontWeight: "700",
 	},
 	productOldPrice: {
 		marginTop: 2,
-		marginHorizontal: 4,
-		fontSize: 11, // Increased from 9
+		fontSize: 10,
 		color: "#9ca3af",
 		textDecorationLine: "line-through",
 	},
 	ratingRow: {
-		marginTop: 4,
-		marginHorizontal: 4,
+		marginTop: 3,
 		flexDirection: "row",
 		alignItems: "center",
 	},
 	star: {
-		fontSize: 12, // Increased from 10
-		color: "#f7a400",
-		marginRight: 4,
+		fontSize: 12,
+		color: "#f7b500",
+		marginRight: 3,
 	},
 	ratingText: {
-		fontSize: 12, // Increased from 11
+		fontSize: 12,
 		color: "#6b7280",
 	},
 	promoSection: {

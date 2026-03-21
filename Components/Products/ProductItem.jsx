@@ -383,6 +383,96 @@ export const categoryProducts = {
       description:
         "Smart watch with health tracking, notifications, and all-day battery life.",
     },
+    {
+      id: "p13",
+      title: "iPhone 15, 128GB",
+      category: "Electronics",
+      price: 119999,
+      originalPrice: 129999,
+      discount: 8,
+      isNew: true,
+      rating: 4.8,
+
+      images: [
+        "https://imgs.search.brave.com/EgayVsg0JwIbj5Q-gkebIAjrtXgOe4BlMz-wQixHywg/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL0kv/NzF6UEpCb0RCb0wu/anBn",
+        "https://imgs.search.brave.com/EgayVsg0JwIbj5Q-gkebIAjrtXgOe4BlMz-wQixHywg/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL0kv/NzF6UEpCb0RCb0wu/anBn",
+        "https://imgs.search.brave.com/EgayVsg0JwIbj5Q-gkebIAjrtXgOe4BlMz-wQixHywg/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL0kv/NzF6UEpCb0RCb0wu/anBn",
+        "https://imgs.search.brave.com/EgayVsg0JwIbj5Q-gkebIAjrtXgOe4BlMz-wQixHywg/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL0kv/NzF6UEpCb0RCb0wu/anBn",
+      ],
+
+      videos: [
+        "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+        "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+      ],
+
+      specifications: {
+        brand: "Apple",
+        modelId: "IPH15-128GB",
+        color: "Red",
+        storage: "128GB",
+        display: "6.1-inch Super Retina XDR",
+        camera: "48MP Wide, 12MP Ultra Wide",
+        battery: "Up to 20 hours video playback",
+        os: "iOS 17",
+        usage: "Smartphone for calls, internet, apps, and media",
+      },
+
+      highlights: [
+        "Dynamic Island and Always-On display",
+        "A17 Bionic chip for super-fast performance",
+        "Advanced camera system with cinematic mode",
+        "Ceramic Shield front cover",
+        "Supports MagSafe accessories",
+      ],
+
+      description:
+        "iPhone 15 with 128GB storage, powerful A17 Bionic chip, advanced camera system, and durable Ceramic Shield display.",
+    },
+    {
+      id: "p12",
+      title: "iPhone 16, 256GB",
+      category: "Electronics",
+      price: 139999,
+      originalPrice: 149999,
+      discount: 7,
+      isNew: true,
+      rating: 4.9,
+
+      images: [
+        "https://imgs.search.brave.com/oHueXip-zQRzlPMNc817P5eM2vwnyDBqn7xQkl1Ulwg/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS53aXJlZC5jb20v/cGhvdG9zLzY2ZWUx/ZWFlZDU1YWExZTNl/ODEzODE2ZC9tYXN0/ZXIvd18xNjAwLGNf/bGltaXQvQXBwbGUt/aVBob25lLTE2LXZz/LWlQaG9uZS0xNi1Q/bHVzLShwaW5rKS0o/Ymx1ZSktUmV2aWV3/ZXItUGhvdG8tU09V/UkNFLUp1bGlhbi1D/aG9ra2F0dHUuanBn",
+        "https://imgs.search.brave.com/oHueXip-zQRzlPMNc817P5eM2vwnyDBqn7xQkl1Ulwg/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS53aXJlZC5jb20v/cGhvdG9zLzY2ZWUx/ZWFlZDU1YWExZTNl/ODEzODE2ZC9tYXN0/ZXIvd18xNjAwLGNf/bGltaXQvQXBwbGUt/aVBob25lLTE2LXZz/LWlQaG9uZS0xNi1Q/bHVzLShwaW5rKS0o/Ymx1ZSktUmV2aWV3/ZXItUGhvdG8tU09V/UkNFLUp1bGlhbi1D/aG9ra2F0dHUuanBn",
+        "https://imgs.search.brave.com/oHueXip-zQRzlPMNc817P5eM2vwnyDBqn7xQkl1Ulwg/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS53aXJlZC5jb20v/cGhvdG9zLzY2ZWUx/ZWFlZDU1YWExZTNl/ODEzODE2ZC9tYXN0/ZXIvd18xNjAwLGNf/bGltaXQvQXBwbGUt/aVBob25lLTE2LXZz/LWlQaG9uZS0xNi1Q/bHVzLShwaW5rKS0o/Ymx1ZSktUmV2aWV3/ZXItUGhvdG8tU09V/UkNFLUp1bGlhbi1D/aG9ra2F0dHUuanBn",
+        "https://imgs.search.brave.com/oHueXip-zQRzlPMNc817P5eM2vwnyDBqn7xQkl1Ulwg/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS53aXJlZC5jb20v/cGhvdG9zLzY2ZWUx/ZWFlZDU1YWExZTNl/ODEzODE2ZC9tYXN0/ZXIvd18xNjAwLGNf/bGltaXQvQXBwbGUt/aVBob25lLTE2LXZz/LWlQaG9uZS0xNi1Q/bHVzLShwaW5rKS0o/Ymx1ZSktUmV2aWV3/ZXItUGhvdG8tU09V/UkNFLUp1bGlhbi1D/aG9ra2F0dHUuanBn",
+      ],
+
+      videos: [
+        "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+        "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+      ],
+
+      specifications: {
+        brand: "Apple",
+        modelId: "IPH16-256GB",
+        color: "Blue",
+        storage: "256GB",
+        display: "6.7-inch Super Retina XDR",
+        camera: "48MP Wide, 12MP Ultra Wide, 12MP Telephoto",
+        battery: "Up to 25 hours video playback",
+        os: "iOS 18",
+        usage: "Smartphone for advanced multimedia, apps, and gaming",
+      },
+
+      highlights: [
+        "Larger display with ProMotion 120Hz refresh rate",
+        "A18 Bionic chip for ultimate performance",
+        "Triple camera system with Night mode",
+        "Improved battery life",
+        "Supports MagSafe and wireless charging",
+      ],
+
+      description:
+        "iPhone 16 with 256GB storage, A18 Bionic chip, triple camera system, and high-performance display for gaming, media, and daily use.",
+    },
   ],
 };
 
@@ -473,7 +563,11 @@ const ProductItem = ({
   const previewImage = resolveImageSource(item?.images?.[0] || image);
 
   const cardStyle =
-    variant === "horizontal" ? styles.horizontalCard : styles.card;
+    variant === "horizontal"
+      ? styles.horizontalCard
+      : variant === "grid"
+        ? styles.gridCard
+        : styles.card;
 
   return (
     <TouchableOpacity style={cardStyle} onPress={onPress} activeOpacity={0.85}>
@@ -546,6 +640,10 @@ const styles = StyleSheet.create({
   card: {
     width: 170,
     marginRight: 14,
+  },
+  gridCard: {
+    width: "48.5%",
+    marginBottom: 14,
   },
   horizontalCard: {
     width: "100%",

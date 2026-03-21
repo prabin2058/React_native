@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { allProducts } from "./Products/ProductItem";
 
 const resolveImageSource = (source) => {
@@ -27,20 +27,13 @@ const Flashdeal = ({ products = allProducts, onProductPress, onViewAll, limit = 
 				</TouchableOpacity>
 			</View>
 
-			<FlatList
-				data={flashProducts}
-				keyExtractor={(item) => item.id?.toString()}
-				numColumns={2}
-				scrollEnabled={false}
-				showsVerticalScrollIndicator={false}
-				columnWrapperStyle={styles.gridRow}
-				contentContainerStyle={styles.listContent}
-				ListFooterComponent={<Image source={saleBanner} style={styles.saleBanner} resizeMode="cover" />}
-				renderItem={({ item }) => {
+			<View style={styles.productGrid}>
+				{flashProducts.map((item) => {
 					const previewImage = resolveImageSource(item?.images?.[0] || item?.image);
 
 					return (
 						<TouchableOpacity
+							key={item.id?.toString()}
 							style={styles.productCard}
 							activeOpacity={0.85}
 							onPress={() => onProductPress?.(item)}
@@ -75,8 +68,10 @@ const Flashdeal = ({ products = allProducts, onProductPress, onViewAll, limit = 
 							</View>
 						</TouchableOpacity>
 					);
-				}}
-			/>
+				})}
+			</View>
+
+			<Image source={saleBanner} style={styles.saleBanner} resizeMode="cover" />
 		</View>
 	);
 };
@@ -104,21 +99,20 @@ const styles = StyleSheet.create({
 		fontSize: 14,
 		fontWeight: "600",
 	},
-	listContent: {
+	productGrid: {
 		paddingHorizontal: 12,
-	},
-	gridRow: {
+		flexDirection: "row",
+		flexWrap: "wrap",
 		justifyContent: "space-between",
-		marginBottom: 12,
 	},
 	productCard: {
-		width: "48.5%",
+		flexBasis: "48.5%",
+		maxWidth: "48.5%",
+		marginBottom: 14,
 	},
 	productImageWrap: {
-		width: "100%",
 		aspectRatio: 1,
-		borderRadius: 20,
-		backgroundColor: "#ececef",
+		borderRadius: 18,
 		overflow: "hidden",
 		marginBottom: 8,
 	},

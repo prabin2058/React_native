@@ -38,6 +38,7 @@ const ProductList = ({
           keyExtractor={(item) => item.id?.toString()}
           numColumns={numColumns}
           showsVerticalScrollIndicator={false}
+          columnWrapperStyle={styles.gridRow}
           contentContainerStyle={styles.gridList}
           renderItem={({ item }) => (
             <ProductItem
@@ -92,13 +93,13 @@ export default ProductList;
 const styles = StyleSheet.create({
   wrapper: {
     marginTop: 20,
-    paddingHorizontal: 15,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 15,
+    paddingHorizontal: 15,
   },
   headerTitle: {
     fontSize: 18,
@@ -111,12 +112,17 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   horizontalList: {
+    paddingLeft: 15,
     paddingRight: 15,
   },
   verticalList: {
     // For vertical lists
   },
   gridList: {
+    paddingHorizontal: 12,
     paddingBottom: 10,
+  },
+  gridRow: {
+    justifyContent: 'space-between',
   },
 });
